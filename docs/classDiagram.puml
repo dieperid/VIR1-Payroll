@@ -47,7 +47,10 @@ package "Entities"
 package "Repositories"
 {
     interface EmployeeRepository{}
-    class LoadDatabase{}
+    class LoadDatabase <<Configuration>> {
+        -log: Logger
+        +initDatabase(repository: EmployeeRepository): CommandLineRunner
+    }
 }
 
 package "Spring"
