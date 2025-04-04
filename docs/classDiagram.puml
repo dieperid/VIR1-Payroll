@@ -3,27 +3,67 @@
 skinparam classAttributeIconSize 0
 
 'packages
+package "Java"
+{
+    class RuntimeException{}
+}
+
 package "Controllers"
 {
-    class EmployeeController{}
-    class EmployeeNotFoundAdvice{}
-    class EmployeeNotFoundException{}
+    class EmployeeController <<RestController>> {
+        -repository: EmployeeRepository
+        +EmployeeController(repository: EmployeeRepository)
+        +all(): Employee[]
+        +newEmployee(newEmployee: Employee): Employee
+        +one(id: Long): Employee
+        +replaceEmployee(newEmployee: Employee, id: Long): Employee
+        +deleteEmployee(id: Long): Void
+    }
+    class EmployeeNotFoundAdvice <<ControllerAdvice>> {
+        +employeeNotFoundHandler(ex: EmployeeNotFoundException): String
+    }
+    class EmployeeNotFoundException{
+        +EmployeeNotFoundException(id: Long): RuntimeException
+    }
 }
 
 package "Entities"
 {
-    class Employee{}
+    class Employee <<Entity>> {
+        -id: Long
+        -name: String
+        -role: String
+        +Employee()
+        +Employee(name: String, role: String)
+        +<get,set>id(): Long
+        +<get,set>name(): String
+        +<get,set>role(): String
+        +equals(o: object): Boolean
+        +hashCode(): Int
+        +toString(): String
+    }
 }
 
 package "Repositories"
 {
-    class EmployeeRepository{}
+    interface EmployeeRepository{}
+    class LoadDatabase{}
+}
+
+package "Spring"
+{
+    class JpaRepository{}
 }
 
 'relations
+EmployeeNotFoundException --|> RuntimeException
+
 EmployeeController --> Employee
 EmployeeController --> EmployeeRepository
 
 EmployeeController ..> EmployeeNotFoundException : throws
 EmployeeNotFoundAdvice --> EmployeeNotFoundException
+
+LoadDatabase --> EmployeeRepository
+EmployeeRepository --|> JpaRepository
 @enduml
