@@ -95,8 +95,8 @@ package "Java"
 
 
 'relations
-EmployeeNotFoundException --|> RuntimeException
 
+'Employee
 EmployeeController --> EmployeeRepository
 EmployeeController --> Employee
 
@@ -104,5 +104,20 @@ EmployeeController ..> EmployeeNotFoundException : throws
 EmployeeNotFoundAdvice --> EmployeeNotFoundException
 
 EmployeeRepository --|> JpaRepository
+EmployeeNotFoundException --|> RuntimeException
+
 LoadDatabase --> EmployeeRepository
+
+'Department
+DepartmentController --> DepartmentRepository
+DepartmentController --> Department
+
+DepartmentController ..> DepartmentNotFoundException : throws
+DepartmentNotFoundAdvice --> DepartmentNotFoundException
+
+DepartmentRepository --|> JpaRepository
+DepartmentNotFoundException ---|> RuntimeException
+
+LoadDatabase --> DepartmentRepository
+
 @enduml
