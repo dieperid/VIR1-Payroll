@@ -103,10 +103,11 @@ EmployeeController --> Employee
 EmployeeController ..> EmployeeNotFoundException : throws
 EmployeeNotFoundAdvice --> EmployeeNotFoundException
 
+LoadDatabase -> EmployeeRepository
+
 EmployeeRepository --|> JpaRepository
 EmployeeNotFoundException --|> RuntimeException
 
-LoadDatabase --> EmployeeRepository
 
 'Department
 DepartmentController --> DepartmentRepository
@@ -116,8 +117,8 @@ DepartmentController ..> DepartmentNotFoundException : throws
 DepartmentNotFoundAdvice --> DepartmentNotFoundException
 
 DepartmentRepository --|> JpaRepository
-DepartmentNotFoundException ---|> RuntimeException
+DepartmentNotFoundException --|> RuntimeException
 
-LoadDatabase --> DepartmentRepository
+Department <-- Employee
 
 @enduml
