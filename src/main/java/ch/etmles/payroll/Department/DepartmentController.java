@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/department")
 public class DepartmentController {
 
     private final DepartmentRepository repository;
@@ -18,7 +19,7 @@ public class DepartmentController {
     /* curl sample :
     curl -i localhost:8080/department
     */
-    @GetMapping("/department")
+    @GetMapping
     List<Department> all(){
         return repository.findAll();
     }
@@ -28,7 +29,7 @@ public class DepartmentController {
         -H "Content-type:application/json" ^
         -d "{\"name\": \"Informatique\"}"
     */
-    @PostMapping("/department")
+    @PostMapping
     Department newDepartment(@RequestBody Department newDepartment){
         return repository.save(newDepartment);
     }
@@ -36,7 +37,7 @@ public class DepartmentController {
     /* curl sample :
     curl -i localhost:8080/department/1
     */
-    @GetMapping("/department/{id}")
+    @GetMapping("/{id}")
     Department one(@PathVariable Long id){
         return repository.findById(id)
                 .orElseThrow(() -> new DepartmentNotFoundException(id));
@@ -47,7 +48,7 @@ public class DepartmentController {
         -H "Content-type:application/json" ^
         -d "{\"name\": \"Samwise Bing\", \"role\": \"peer-to-peer\"}"
      */
-    @PutMapping("/department/{id}")
+    @PutMapping("/{id}")
     Department replaceDepartment(@RequestBody Department newDepartment, @PathVariable Long id) {
         return repository.findById(id)
                 .map(department -> {
@@ -63,7 +64,7 @@ public class DepartmentController {
     /* curl sample :
     curl -i -X DELETE localhost:8080/department/2
     */
-    @DeleteMapping("/department/{id}")
+    @DeleteMapping("/{id}")
     void deleteDepartment(@PathVariable Long id){
         repository.deleteById(id);
     }
