@@ -10,12 +10,13 @@ package "Employee "
         -name: String
         -role: String
         -email: String
-        -department: Department
+        -department: Department?
         +Employee(name: String, role: String, email: String, department: Department?)
         +<get,set>id(): Long
         +<get,set>name(): String
         +<get,set>role(): String
         +<get,set>email(): String
+        +<get,set>department(): Department?
         +equals(o: object): Boolean
         +hashCode(): Int
         +toString(): String
