@@ -3,13 +3,24 @@
 skinparam classAttributeIconSize 0
 
 'packages
-package "Java"
+package "Employee "
 {
-    class RuntimeException{}
-}
+    class Employee <<Entity>> {
+        -id: Long
+        -name: String
+        -role: String
+        -email: String
+        -department: Department
+        +Employee(name: String, role: String, email: String, department: Department?)
+        +<get,set>id(): Long
+        +<get,set>name(): String
+        +<get,set>role(): String
+        +<get,set>email(): String
+        +equals(o: object): Boolean
+        +hashCode(): Int
+        +toString(): String
+    }
 
-package "Controllers"
-{
     class EmployeeController <<RestController>> {
         -repository: EmployeeRepository
         +EmployeeController(repository: EmployeeRepository)
@@ -19,6 +30,9 @@ package "Controllers"
         +replaceEmployee(newEmployee: Employee, id: Long): Employee
         +deleteEmployee(id: Long): Void
     }
+
+    interface EmployeeRepository{}
+
     class EmployeeNotFoundAdvice <<ControllerAdvice>> {
         +employeeNotFoundHandler(ex: EmployeeNotFoundException): String
     }
@@ -27,26 +41,42 @@ package "Controllers"
     }
 }
 
-package "Entities"
+package "Department "
 {
-    class Employee <<Entity>> {
+    class Department <<Entity>> {
         -id: Long
         -name: String
-        -role: String
-        +Employee()
-        +Employee(name: String, role: String)
+        +Department(name: String)
         +<get,set>id(): Long
         +<get,set>name(): String
-        +<get,set>role(): String
         +equals(o: object): Boolean
         +hashCode(): Int
         +toString(): String
     }
+
+    class DepartmentController <<RestController>> {
+        -repository: DepartmentRepository
+        +DepartmentController(repository: DepartmentRepository)
+        +all(): Department[]
+        +newDepartment(newDepartment: Department): Department
+        +one(id: Long): Department
+        +replaceDepartment(newDepartment: Department, id: Long): Department
+        +deleteDepartment(id: Long): Void
+    }
+
+    interface DepartmentRepository{}
+
+    class DepartmentNotFoundAdvice <<ControllerAdvice>> {
+        +departmentNotFoundHandler(ex: DepartmentNotFoundException): String
+    }
+    class DepartmentNotFoundException{
+        +departmentNotFoundException(id: Long): RuntimeException
+    }
 }
+
 
 package "Repositories"
 {
-    interface EmployeeRepository{}
     class LoadDatabase <<Configuration>> {
         -log: Logger
         +initDatabase(repository: EmployeeRepository): CommandLineRunner
@@ -58,15 +88,21 @@ package "Spring"
     class JpaRepository{}
 }
 
+package "Java"
+{
+    class RuntimeException{}
+}
+
+
 'relations
 EmployeeNotFoundException --|> RuntimeException
 
-EmployeeController --> Employee
 EmployeeController --> EmployeeRepository
+EmployeeController --> Employee
 
 EmployeeController ..> EmployeeNotFoundException : throws
 EmployeeNotFoundAdvice --> EmployeeNotFoundException
 
-LoadDatabase --> EmployeeRepository
 EmployeeRepository --|> JpaRepository
+LoadDatabase --> EmployeeRepository
 @enduml
